@@ -442,4 +442,81 @@
                 ]
             });
         });
-    });</script></body></html>
+    });</script>
+<script>
+/* Second Wave Bahamas - Slot Machine Counter Animation */
+(function() {
+    var hasAnimated = false;
+
+    function formatNumber(num) {
+        return num.toLocaleString("en-US");
+    }
+
+    function animateCounter(elementId, endValue, duration, suffix) {
+        suffix = suffix || "";
+        var el = document.getElementById(elementId);
+        if (!el) return;
+
+        var span = el.querySelector("h4 span span span") || el.querySelector("span span span") || el.querySelector("span");
+        if (!span) return;
+
+        var startTime = Date.now();
+        var interval = 30;
+
+        var timer = setInterval(function() {
+            var elapsed = Date.now() - startTime;
+            var progress = Math.min(elapsed / duration, 1);
+
+            if (progress >= 1) {
+                span.textContent = formatNumber(endValue) + suffix;
+                clearInterval(timer);
+                return;
+            }
+
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var displayValue;
+
+            if (progress < 0.7) {
+                var jitterRange = endValue * 0.15 * (1 - progress);
+                var jitter = (Math.random() - 0.5) * 2 * jitterRange;
+                displayValue = Math.floor(eased * endValue + jitter);
+            } else {
+                displayValue = Math.floor(eased * endValue);
+            }
+
+            displayValue = Math.max(0, Math.min(displayValue, endValue));
+            span.textContent = formatNumber(displayValue) + suffix;
+        }, interval);
+    }
+
+    function startCounters() {
+        if (hasAnimated) return;
+        hasAnimated = true;
+        animateCounter("comp-mm2vvdlu", 3065, 2000, "");
+        animateCounter("comp-mm2vwewj", 1158, 2200, "");
+        animateCounter("comp-mm2vwgin", 250, 2400, "+");
+    }
+
+    function isInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
+    window.addEventListener("load", function() {
+        var counterEl = document.getElementById("comp-mm2vvdlu");
+        if (!counterEl) return;
+
+        if (isInViewport(counterEl)) {
+            setTimeout(startCounters, 500);
+        } else {
+            window.addEventListener("scroll", function onScroll() {
+                if (isInViewport(counterEl)) {
+                    setTimeout(startCounters, 200);
+                    window.removeEventListener("scroll", onScroll);
+                }
+            });
+        }
+    });
+})();
+</script>
+</body></html>
